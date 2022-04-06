@@ -4,6 +4,7 @@ def linear_regression():
     return 
 
 def naive_bayes_classifier(): 
+    # Calculate Pr(survived) and Pr(dead)
     num_passengers = len(training_df.index)
     num_survivors  = training_df[["Survived"]].value_counts()[1]
     num_dead       = training_df[["Survived"]].value_counts()[0]
@@ -11,8 +12,41 @@ def naive_bayes_classifier():
     pr_survived = num_survivors / num_passengers
     pr_dead     = num_dead / num_passengers
 
-    print(pr_survived)
-    print(pr_dead)
+
+    # Calculate conditional probabilities for each passenger feature 
+    pclass_dict = {
+        'pclass': [1, 2, 3],
+        'survived': [0, 0, 0],
+        'dead': [0, 0, 0]
+    }
+
+    for row in training_df.iterrows():
+        survived = row["Survived"]
+        pclass = row["Pclass"]
+
+        if survived: 
+            pclass_dict['survived'][pclass - 1] += 1
+        else:
+            pclass_dict['dead'][pclass - 1] += 1
+
+
+    pclass = pd.DataFrame(data=pclass_dict)
+    print(pclass)
+
+    """
+    PassengerId
+    Survived
+    Pclass
+    Name
+    Sex
+    Age
+    SibSp
+    Parch
+    Ticket
+    Fare
+    Cabin
+    Embarked
+    """
 
 def main(): 
     global training_df
