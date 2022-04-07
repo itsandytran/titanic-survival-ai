@@ -18,35 +18,33 @@ def naive_bayes_classifier():
         'pclass': [1, 2, 3],
         'survived': [0, 0, 0],
         'dead': [0, 0, 0]
-    }
-
-    for row in training_df.iterrows():
-        survived = row["Survived"]
-        pclass = row["Pclass"]
-
+    }   
+    
+    for index, row in training_df.iterrows():
+        survived = row["Survived"] 
+        pclass   = row["Pclass"]
+        
         if survived: 
             pclass_dict['survived'][pclass - 1] += 1
         else:
             pclass_dict['dead'][pclass - 1] += 1
 
-
     pclass = pd.DataFrame(data=pclass_dict)
+    
+    pclass_given_survived = []
+    pclass_given_dead     = [] 
+    for index, row in pclass.iterrows(): 
+        pclass_and_survived = row["survived"]
+        pclass_and_dead     = row["dead"]
+
+        pclass_given_survived.append(pclass_and_survived / num_survivors)
+        pclass_given_dead.append(pclass_and_dead / num_dead) 
+
+    pclass["pclass_given_survived"] = pclass_given_survived
+    pclass["pclass_given_dead"]     = pclass_given_dead
+
     print(pclass)
 
-    """
-    PassengerId
-    Survived
-    Pclass
-    Name
-    Sex
-    Age
-    SibSp
-    Parch
-    Ticket
-    Fare
-    Cabin
-    Embarked
-    """
 
 def main(): 
     global training_df
