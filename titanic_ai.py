@@ -1,5 +1,6 @@
 import pandas as pd
-import numpy
+import numpy as np
+import re
 
 def linear_regression(): 
     return 
@@ -34,7 +35,7 @@ def naive_bayes_classifier():
             return cabin[0]
         
         # If cabin is an array, return a list of unique cabin first letters
-        elif isinstance(cabin, numpy.ndarray):
+        elif isinstance(cabin, np.ndarray):
             cabin_list = list(cabin)
             for i in range(len(cabin_list)):        
                 if isinstance(cabin_list[i], str):
@@ -43,7 +44,39 @@ def naive_bayes_classifier():
     
         return cabin
     
-    # def getAgeGroup(age): 
+    def getAgeGroup(age): 
+        # If age is a float, return age group
+        if isinstance(age, float): 
+            if age < 15: 
+                return "Children"
+            elif age < 25: 
+                return "Youth"
+            elif age < 65: 
+                return "Adults"
+            else: 
+                return "Seniors"
+        return age 
+
+    def getTitle(name): 
+        # If name is a string, return their title 
+        if isinstance(name, str):
+            split = name.split(",")[1].split()
+            for s in split: 
+                if "." in s:
+                    return s
+
+        # If name is an array, return a list of unique name titles (Mr. Mrs. Dr. etc)
+        if isinstance(name, np.ndarray):
+            titles = set()
+            for n in name: 
+                split = n.split(",")[1].split()
+                for s in split: 
+                    if "." in s:
+                        titles.add(s)
+
+            return list(titles)
+        
+        return name
 
     # Calculate Pr(survived) and Pr(dead)
     num_passengers = len(training_df.index)
@@ -62,12 +95,16 @@ def naive_bayes_classifier():
     
     # Initialize CPTs for each passenger's continuous features
     Cabin_df    = makeCPT("Cabin", getCabinLetter(training_df["Cabin"].unique()))
-    # Age_df      = makeCPT("Age", getAgeGroup(training_df["Cabin"].unique()))
-    # cabin (just get the letter)
-    # age   (group by group)
-    # title (Dr. Mrs. Mr. etc)
-    # ticket???
-
+    Age_df      = makeCPT("Age", ["Children", "Youth", "Adults", "Seniors"])
+    
+    Title_df = makeCPT("Title", getTitle(training_df["Name"].unique()))
+    
+    """ ========= FARES ==========
+    fares = list(training_df["Fare"].unique())
+    fares.sort()
+    print(fares)
+    """
+    
 
     for index, row in training_df.iterrows(): 
         survived = row["Survived"] 
@@ -81,6 +118,8 @@ def naive_bayes_classifier():
 
         # Continuous features
         Cabin_df[survived][getCabinLetter(row["Cabin"])] += 1
+        Age_df[survived][getAgeGroup(row["Age"])] += 1
+        Title_df[survived][getTitle(row["Name"])] += 1
 
     # Add Pr(Feature|Survived) and Pr(Feature|Died) to CPTs
     addConditionalProb(Pclass_df)
@@ -89,14 +128,19 @@ def naive_bayes_classifier():
     addConditionalProb(Parch_df)
     addConditionalProb(Embarked_df)
     addConditionalProb(Cabin_df)
+    addConditionalProb(Age_df)
+    addConditionalProb(Title_df)
+    
     """
     print(Pclass_df)
     print(Sex_df)
     print(SibSp_df)
     print(Parch_df)
     print(Embarked_df)
-    """
     print(Cabin_df)
+    print(Age_df)
+    print(Title_df)
+    """
 
 def main(): 
     global training_df
