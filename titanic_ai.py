@@ -1,12 +1,127 @@
 import pandas as pd
 import numpy as np
-import re
+import math, re
+
+MAX_LOOP_COUNT = 5000
 
 def clean(): 
     return 
 
-def linear_regression(): 
-    return 
+def logistic_regression(training_df, test_df): 
+    # Normalizes the parametes in a dataframe containing only numerical series
+    def normalize_parameters(df):
+        sex = {"male" : 0,
+               "female" : 1}
+        df["Sex"] = df["Sex"].map(sex)
+        df["Age"] = df["Age"].fillna(df["Age"].median())
+        df = (df - df.min()) / (df.max()-df.min())
+
+        return df
+
+    # Applies the logistic regression equation hw(x) to all passengers given their params
+    def generate_predictions(params_list, weights, bias):
+        predictions = []
+        for params in params_list:
+            predictions.append(predict_survival(params, weights, bias))
+        
+        return predictions
+
+    # Implementation of logistic regression equation hw(x) for a single passenger
+    def predict_survival(params, weights, bias):
+        expn = math.exp((np.sum(params * weights) + bias) * -1)
+        decision_value = 1 / (1 + expn)
+        return decision_value
+
+    # Returns total loss given a set of predictions range[0,1] and outcomes range{0,1}
+    def calculate_total_loss(predictions, outcomes):
+        total_loss = 0
+        for i in range(len(predictions)):
+            total_loss += calculate_loss(predictions[i], outcomes[i])
+
+        return total_loss * -1
+
+    # Implementation of the loss function for a single prediction-outcome pair
+    def calculate_loss(prediction, outcome):
+        return math.log(prediction) if outcome else math.log(1 - prediction)
+
+    # Performs gradient descent algorithm on a set of weight parameters
+    def gradient_descent(weights, bias, params_list, outcomes, alpha):
+        new_weights = weights.copy()
+        iteration = 0
+        predictions = []
+        min = False
+        prev_t_loss = None
+
+        while not(min) and iteration <= MAX_LOOP_COUNT:
+            for i in range(len(new_weights)):
+                summation = 0
+                for j in range(len(params_list)):
+                    surv = predict_survival(params_list[j], weights, bias)
+                    summation += (surv - outcomes[j]) * params_list[j][i]
+
+                new_weights[i] -= alpha * summation
+            
+            summation = 0
+            for i in range(len(params_list)):
+                surv = predict_survival(params_list[i], weights, bias)
+                summation += (surv - outcomes[i])
+
+            bias = alpha * summation
+            weights = new_weights
+            predictions = generate_predictions(params_list, weights, bias)
+            total_loss = calculate_total_loss(predictions, outcomes)
+
+            #if(iteration % 100 == 0):
+                #print(f'After iteration {iteration}: \nweights = {weights}\nbias = {bias}\ntotal_loss={total_loss}')
+            
+            if (total_loss == prev_t_loss):
+                min = True
+            else:
+                prev_t_loss = total_loss
+            
+            iteration += 1
+        
+        return (weights, bias, predictions)
+
+    """ ==================================== PARAMETERS ====================================
+    Index           |         0          1          2            3            4          5
+    Attribute       |    Pclass        Sex        Age        SibSp        Parch       Fare
+    Value Type      |       int        int      float          int          int      float
+    Value Range     |     
+    (non-normalized)|     [1, 3]      [0-1]     [0-80]        [0-8]        [0-9]    [0-512]
+
+    Description:
+    Pclass - Ticket class. 1 = 1st Class, 2 = 2nd Class, 3 = 3rd Class
+    Sex - 0 = male, 1 = female
+    SibSp - Number of siblings and/or spouses
+    ParCh - Number of parents and/or children
+    Fare - Cost of passenger fare (not adjusted for inflation)
+    """
+
+    submission_df = test_df["PassengerId"].to_frame()
+    # Setting up the datasets
+
+    outcomes = training_df["Survived"].to_numpy()
+    training_df = training_df.drop(["PassengerId", "Survived", "Name", "Ticket" , "Cabin", "Embarked"], axis=1)
+    tr_params_list = normalize_parameters(training_df).to_numpy()
+
+    test_df = test_df.drop(["PassengerId", "Name", "Ticket" , "Cabin", "Embarked"], axis=1)
+    test_params_list = normalize_parameters(test_df).to_numpy()
+
+    # Inital weight and bias
+    init_weights = np.array([-1.0, 1.0, -1.0, 1.0, 1.0, 1.0])
+    init_bias = -2.0
+
+    # Perform gradient_descent until convergence
+    result = gradient_descent(init_weights, init_bias, tr_params_list, outcomes, 0.02)
+    weights = np.array(result[0])
+    bias = result[1]
+
+    predictions = np.array(generate_predictions(test_params_list, weights, bias))
+    survival = np.around(predictions).astype('i')
+    submission_df["Survived"] = survival
+
+    submission_df.to_csv("submission_logreg.csv", index=False)
 
 def naive_bayes_classifier(training_df, test_df): 
     def makeCPT(feature, feature_types): 
@@ -201,6 +316,7 @@ def main():
     test_df     = pd.read_csv("./datasets/test.csv")
     
     naive_bayes_classifier(training_df, test_df)
+    logistic_regression(training_df, test_df)
 
     
 if __name__ == "__main__": 
