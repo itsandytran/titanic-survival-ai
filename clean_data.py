@@ -152,7 +152,7 @@ for ind in df.index:
 
 
 df = df.sort_values(by=['Name'])
-df.to_csv("clean_test.csv")
+df.to_csv("clean_training.csv")
 
 print(set(title))
 

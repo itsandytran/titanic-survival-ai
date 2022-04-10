@@ -1,7 +1,7 @@
 ,PassengerId,Survived,Pclass,Name,Sex,Age,SibSp,Parch,Ticket,Fare,Cabin,Embarked,Title,First & Middle Name,Surname,Siblings,Parents,Children,Spouse
 845,846,0,3,"Abbing, Mr. Anthony",male,42.0,0,0,C.A. 5547,7.55,,S,Mr,Anthony,Abbing,0,0,0,
 746,747,0,3,"Abbott, Mr. Rossmore Edward",male,16.0,1,1,C.A. 2673,20.25,,S,Mr,Rossmore Edward,Abbott,0,1,0,
-279,280,1,3,"Abbott, Mrs. Stanton (Rosa Hunt)",female,35.0,1,1,C.A. 2673,20.25,,S,Mrs,Stanton (Rosa Hunt),Abbott,0,0,1,1
+279,280,1,3,"Abbott, Mrs. Stanton (Rosa Hunt)",female,35.0,0,2,C.A. 2673,20.25,,S,Mrs,Stanton (Rosa Hunt),Abbott,0,0,2,
 308,309,0,2,"Abelson, Mr. Samuel",male,30.0,1,0,P/PP 3381,24.0,,C,Mr,Samuel,Abelson,0,0,0,
 874,875,1,2,"Abelson, Mrs. Samuel (Hannah Wizosky)",female,28.0,1,0,P/PP 3381,24.0,,C,Mrs,Samuel (Hannah Wizosky),Abelson,0,0,0,
 365,366,0,3,"Adahl, Mr. Mauritz Nils Martin",male,30.0,0,0,C 7076,7.25,,S,Mr,Mauritz Nils Martin,Adahl,0,0,0,
