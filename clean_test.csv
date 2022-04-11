@@ -22,7 +22,7 @@
 19,911,3,"Assaf Khalil, Mrs. Mariana (Miriam"")""",female,45.0,0,0,2696,7.225,,C,Mrs,"Mariana (Miriam"")""",Assaf Khalil,0,0,0,0
 17,909,3,"Assaf, Mr. Gerios",male,21.0,0,0,2692,7.225,,C,Mr,Gerios,Assaf,0,0,0,0
 325,1217,3,"Assam, Mr. Ali",male,23.0,0,0,SOTON/O.Q. 3101309,7.05,,S,Mr,Ali,Assam,0,0,0,0
-202,1094,1,"Astor, Col. John Jacob",male,47.0,1,0,PC 17757,227.525,C62 C64,C,Col,John Jacob,Astor,,0,0,
+202,1094,1,"Astor, Col. John Jacob",male,47.0,1,0,PC 17757,227.525,C62 C64,C,Col,John Jacob,Astor,1,0,0,0
 237,1129,3,"Baccos, Mr. Raffull",male,20.0,0,0,2679,7.225,,C,Mr,Raffull,Baccos,0,0,0,0
 87,979,3,"Badman, Miss. Emily Louisa",female,18.0,0,0,A/4 31416,8.05,,S,Miss,Emily Louisa,Badman,0,0,0,0
 198,1090,2,"Baimbrigge, Mr. Charles Robert",male,23.0,0,0,C.A. 31030,10.5,,S,Mr,Charles Robert,Baimbrigge,0,0,0,0
@@ -126,7 +126,7 @@
 247,1139,2,"Drew, Mr. James Vivian",male,42.0,1,1,28220,32.5,,S,Mr,James Vivian,Drew,0,0,1,1
 331,1223,1,"Dulles, Mr. William Crothers",male,39.0,0,0,PC 17580,29.7,A18,C,Mr,William Crothers,Dulles,0,0,0,0
 155,1047,3,"Duquemin, Mr. Joseph",male,24.0,0,0,S.O./P.P. 752,7.55,,S,Mr,Joseph,Duquemin,0,0,0,0
-220,1112,2,"Duran y More, Miss. Florentina",female,30.0,1,0,SC/PARIS 2148,13.8583,,C,Miss,Florentina,Duran y More,,0,0,
+220,1112,2,"Duran y More, Miss. Florentina",female,30.0,1,0,SC/PARIS 2148,13.8583,,C,Miss,Florentina,Duran y More,1,0,0,0
 172,1064,3,"Dyker, Mr. Adolf Fredrik",male,23.0,1,0,347072,13.9,,S,Mr,Adolf Fredrik,Dyker,1,0,0,0
 90,982,3,"Dyker, Mrs. Adolf Fredrik (Anna Elisabeth Judith Andersson)",female,22.0,1,0,347072,13.9,,S,Mrs,Adolf Fredrik (Anna Elisabeth Judith Andersson),Dyker,1,0,0,0
 150,1042,1,"Earnshaw, Mrs. Boulton (Olive Potter)",female,23.0,0,1,11767,83.1583,C54,C,Mrs,Boulton (Olive Potter),Earnshaw,0,1,0,0
@@ -187,7 +187,7 @@
 213,1105,2,"Howard, Mrs. Benjamin (Ellen Truelove Arman)",female,60.0,1,0,24065,26.0,,S,Mrs,Benjamin (Ellen Truelove Arman),Howard,0,0,0,1
 243,1135,3,"Hyman, Mr. Abraham",male,30.0,0,0,3470,7.8875,,S,Mr,Abraham,Hyman,0,0,0,0
 10,902,3,"Ilieff, Mr. Ylio",male,30.0,0,0,349220,7.8958,,S,Mr,Ylio,Ilieff,0,0,0,0
-18,910,3,"Ilmakangas, Miss. Ida Livija",female,27.0,1,0,STON/O2. 3101270,7.925,,S,Miss,Ida Livija,Ilmakangas,,0,0,
+18,910,3,"Ilmakangas, Miss. Ida Livija",female,27.0,1,0,STON/O2. 3101270,7.925,,S,Miss,Ida Livija,Ilmakangas,1,0,0,0
 372,1264,1,"Ismay, Mr. Joseph Bruce",male,49.0,0,0,112058,0.0,B52 B54 B56,S,Mr,Joseph Bruce,Ismay,0,0,0,0
 31,923,2,"Jefferys, Mr. Clifford Thomas",male,24.0,2,0,C.A. 31029,31.5,,S,Mr,Clifford Thomas,Jefferys,2,0,0,0
 319,1211,2,"Jefferys, Mr. Ernest Wilfred",male,22.0,2,0,C.A. 31029,31.5,,S,Mr,Ernest Wilfred,Jefferys,2,0,0,0

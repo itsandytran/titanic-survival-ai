@@ -198,6 +198,7 @@ for ind in df.index:
       df.at[ind, 'Siblings'] = df['SibSp'][ind]
       df.at[ind, 'Spouse'] = 0
 
+#edit
 
 df = df.sort_values(by=['Name'])
 df.to_csv("clean_training.csv")
