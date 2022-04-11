@@ -93,7 +93,7 @@ df['Children'] = children
 for ind in df.index:
    if df["Children"][ind] >= 1 and df['SibSp'][ind] >= 1:
       spouses.append(1)
-      df['Siblings'] = df['SibSp'][ind] - 1
+      df.at[ind, 'Siblings'] = df['SibSp'][ind] - 1
    else:
       spouses.append('')
 
@@ -101,20 +101,16 @@ df['Spouse'] = spouses
 
 #if title is mrs. and have sibsp >=1, assume one of them is spouse
 for ind in df.index:
-   if 'Mrs' in df['Name'][ind] and df['SibSp'][ind] >= 1 and pd.isnull(df['Spouse'][ind]):
-      if '(Hannah Wizosky)' in df['Name'][ind]:
-         print('Mrs' in df['Name'][ind])
-         print(df['SibSp'][ind] >= 1)
-         print(pd.isnull(df['Spouse'][ind]))
-      df['Spouse'][ind] = 1
-      df['Siblings'][ind] = df['SibSp'][ind] - 1
+   if 'Mrs' in df['Name'][ind] and df['SibSp'][ind] >= 1 and df['Spouse'][ind]=='':
+      df.at[ind, 'Spouse'] = 1
+      df.at[ind, 'Siblings'] = df['SibSp'][ind] - 1
 
 
 
-#group people by last names, can tell mother and father by having parch and sibsp >= 1
+# #group people by last names, can tell mother and father by having parch and sibsp >= 1
 
 
-#applies to males, if in same name group, there is a mrs. with your last name, then spouse +1, rest is sib
+# #applies to males, if in same name group, there is a mrs. with your last name, then spouse +1, rest is sib
 
 
 
@@ -123,10 +119,10 @@ for ind in df.index:
 MED_MASTER_AGE = 6
 for ind in df.index:
    if 'Master' in df['Name'][ind] and pd.isnull(df['Age'][ind]):
-      df['Age'][ind] = MED_MASTER_AGE
+      df.at[ind, 'Age'] = MED_MASTER_AGE
 
-#task 4
-#apply median age to miss
+# #task 4
+# #apply median age to miss
 miss_age = []
 for ind in df.index:
    if 'Miss' in df['Name'][ind] and df['Age'][ind]:
@@ -135,19 +131,20 @@ for ind in df.index:
 
 for ind in df.index:
    if 'Miss' in df['Name'][ind] and pd.isnull(df['Age'][ind]):
-      df['Age'] == statistics.median(miss_age)
+      df.at[ind, 'Age'] == statistics.median(miss_age)
 
 #task 5
 #if person is miss, sibsp must all be siblings, parch must be all parents
 for ind in df.index:
    if 'Miss' in df['Name'][ind] and pd.isnull(df['Age'][ind]) and pd.isnull(df['Siblings'][ind]):
-      df['Siblings'][ind] = df['SibSp'][ind]
+      df.at[ind, 'Siblings'] = df['SibSp'][ind]
 
-#task 6
+# #task 6
 #can only have 1 spouse, if sibsp > 1, siblings will be sibsp-1
 for ind in df.index:
    if df['SibSp'][ind] > 1 and pd.isnull(df['Siblings'][ind]):
-      df['Siblings'] = df['SibSp'][ind] - 1
+      df.at[ind, 'Siblings'] = df['SibSp'][ind] - 1
+
 
 
 
