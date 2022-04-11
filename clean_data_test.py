@@ -195,8 +195,8 @@ for ind in df.index:
 #final clean
 for ind in df.index:
    if df['Siblings'][ind] == '' or df['Spouse'][ind] == '':
-      df.at[ind, 'Siblings'] == df['SibSp'][ind]
-      df.at[ind, 'Spouse'] == 0
+      df.at[ind, 'Siblings'] = df['SibSp'][ind]
+      df.at[ind, 'Spouse'] = 0
 
 
 df = df.sort_values(by=['Name'])
