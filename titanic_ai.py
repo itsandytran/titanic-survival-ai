@@ -265,14 +265,20 @@ def naive_bayes_classifier(training_df, test_df):
     pr_died        = num_dead / num_passengers
 
     # Initialize CPTs for passenger's features
-    Pclass_df   = makeCPT("Pclass", list(training_df["Pclass"].unique()))
-    Sex_df      = makeCPT("Sex", list(training_df["Sex"].unique()))
-    SibSp_df    = makeCPT("SibSp", list(training_df["SibSp"].unique()))
-    Parch_df    = makeCPT("Parch", list(training_df["Parch"].unique()))
+    Pclass_df   = makeCPT("Pclass",   list(training_df["Pclass"].unique()))
+    Sex_df      = makeCPT("Sex",      list(training_df["Sex"].unique()))
+    SibSp_df    = makeCPT("SibSp",    list(training_df["SibSp"].unique()))
+    Parch_df    = makeCPT("Parch",    list(training_df["Parch"].unique()))
     Embarked_df = makeCPT("Embarked", list(training_df["Embarked"].unique()))
-    Cabin_df    = makeCPT("Cabin", getCabinLetter(training_df["Cabin"].unique()))
-    Age_df      = makeCPT("Age", ["Children", "Youth", "Adults", "Seniors"])
-    Title_df    = makeCPT("Title", getTitle(training_df["Name"].unique()))
+    Cabin_df    = makeCPT("Cabin",    getCabinLetter(training_df["Cabin"].unique()))
+    Age_df      = makeCPT("Age",      ["Children", "Youth", "Adults", "Seniors"])
+    Title_df    = makeCPT("Title",    getTitle(training_df["Name"].unique()))
+
+    # New columns (from cleaned data)
+    Siblings_df = makeCPT("Siblings", list(training_df["Siblings"].unique()))
+    Spouses_df  = makeCPT("Spouses", list(training_df["Spouses"].unique()))
+    Parents_df  = makeCPT("Parents", list(training_df["Parents"].unique()))
+    Children_df = makeCPT("Children", list(training_df["Children"].unique()))
 
     # Count the number of survivors or dead per feature 
     for index, row in training_df.iterrows(): 
@@ -287,7 +293,13 @@ def naive_bayes_classifier(training_df, test_df):
         Age_df[survived][getAgeGroup(row["Age"])] += 1          # Age group
         Title_df[survived][getTitle(row["Name"])] += 1          # Title
 
-    # Add Pr(Feature|Survived) and Pr(Feature|Died) to CPTs
+        # New columns (from cleaned data)
+        Siblings_df[survived][row["Siblings"]] += 1             # Siblings 
+        Spouses_df[survived][row["Spouses"]] += 1               # Spouses 
+        Parents_df[survived][row["Parents"]] += 1               # Parents 
+        Children_df[survived][row["Children"]] += 1             # Children
+
+    # Compute Pr(Feature|Survived) and Pr(Feature|Died)
     addConditionalProb(Pclass_df)
     addConditionalProb(Sex_df)
     addConditionalProb(SibSp_df)
@@ -295,7 +307,11 @@ def naive_bayes_classifier(training_df, test_df):
     addConditionalProb(Embarked_df)
     addConditionalProb(Cabin_df)
     addConditionalProb(Age_df)
-    addConditionalProb(Title_df)        
+    addConditionalProb(Title_df)     
+    addConditionalProb(Siblings_df)
+    addConditionalProb(Spouses_df)
+    addConditionalProb(Parents_df)
+    addConditionalProb(Children_df)   
 
     # Make survival predictions on passengers in test data (test_df)
     Survival_predictions = [] 
@@ -309,6 +325,10 @@ def naive_bayes_classifier(training_df, test_df):
         pr_Cabin_given_survived    = getPrFeatureGivenDeadOrAlive(Cabin_df   , getCabinLetter(row["Cabin"]) , "feature_given_survived")
         pr_Age_given_survived      = getPrFeatureGivenDeadOrAlive(Age_df     , getAgeGroup(row["Age"])      , "feature_given_survived")
         pr_Title_given_survived    = getPrFeatureGivenDeadOrAlive(Title_df   , getTitle(row["Name"])        , "feature_given_survived")
+        pr_Siblings_given_survived = getPrFeatureGivenDeadOrAlive(Siblings_df, row["Siblings"]              , "feature_given_survived")
+        pr_Spouses_given_survived  = getPrFeatureGivenDeadOrAlive(Spouses_df , row["Spouses"]               , "feature_given_survived")
+        pr_Parents_given_survived  = getPrFeatureGivenDeadOrAlive(Parents_df , row["Parents"]               , "feature_given_survived")
+        pr_Children_given_survived = getPrFeatureGivenDeadOrAlive(Children_df, row["Children"]              , "feature_given_survived")
         
         pr_Pclass_given_died   = getPrFeatureGivenDeadOrAlive(Pclass_df  , row["Pclass"]                , "feature_given_died")
         pr_Sex_given_died      = getPrFeatureGivenDeadOrAlive(Sex_df     , row["Sex"]                   , "feature_given_died")
@@ -318,6 +338,10 @@ def naive_bayes_classifier(training_df, test_df):
         pr_Cabin_given_died    = getPrFeatureGivenDeadOrAlive(Cabin_df   , getCabinLetter(row["Cabin"]) , "feature_given_died")
         pr_Age_given_died      = getPrFeatureGivenDeadOrAlive(Age_df     , getAgeGroup(row["Age"])      , "feature_given_died")
         pr_Title_given_died    = getPrFeatureGivenDeadOrAlive(Title_df   , getTitle(row["Name"])        , "feature_given_died")
+        pr_Siblings_given_died = getPrFeatureGivenDeadOrAlive(Siblings_df, row["Siblings"]              , "feature_given_died")
+        pr_Spouses_given_died  = getPrFeatureGivenDeadOrAlive(Spouses_df , row["Spouses"]               , "feature_given_died")
+        pr_Parents_given_died  = getPrFeatureGivenDeadOrAlive(Parents_df , row["Parents"]               , "feature_given_died")
+        pr_Children_given_died = getPrFeatureGivenDeadOrAlive(Children_df, row["Children"]              , "feature_given_died")
         
         # Compute the posterior probabilities 
         # Pr(survived | features) and Pr(died | features)
@@ -329,6 +353,10 @@ def naive_bayes_classifier(training_df, test_df):
                                      pr_Cabin_given_survived * \
                                      pr_Age_given_survived * \
                                      pr_Title_given_survived * \
+                                     pr_Siblings_given_survived * \
+                                     pr_Spouses_given_survived * \
+                                     pr_Parents_given_survived * \
+                                     pr_Children_given_survived * \
                                      pr_survived
         
         pr_died_given_features = pr_Pclass_given_died * \
@@ -339,6 +367,10 @@ def naive_bayes_classifier(training_df, test_df):
                                  pr_Cabin_given_died * \
                                  pr_Age_given_died * \
                                  pr_Title_given_died * \
+                                 pr_Siblings_given_died * \
+                                 pr_Spouses_given_died * \
+                                 pr_Parents_given_died * \
+                                 pr_Children_given_died * \
                                  pr_died
         
         # Make prediction by choosing the larger of the two posterior probabilities
